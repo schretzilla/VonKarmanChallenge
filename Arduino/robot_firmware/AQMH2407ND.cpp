@@ -1,52 +1,78 @@
 #include "AQMH2407ND.h"
 
-AQMH2407ND::AQMH2407ND(int enA, int enB, int in1, int in2, int in3, int in4) {
+/* Initilize in mirror mode, useful for lowering pwm pin count */
+AQMH2407ND::AQMH2407ND(int enA, int in1, int in2) {
   pin_enA = enA;
-  pin_enB = enB;
   pin_in[0] = in1;
   pin_in[1] = in2;
+
+  /* Setup the required pins for the motor controllers */
+  pinMode(pin_enA, OUTPUT);
+
+  for(int mot = 0; mot < 2; mot ++)
+    pinMode(pin_in[mot], OUTPUT);
+
+  /* Disable the controller just in case */
+  disable();
+}
+
+/* Initialize as separate outputs */
+AQMH2407ND::AQMH2407ND(int enA, int enB, int in1, int in2, int in3, int in4) {
+  AQMH2407ND(enA, in1, in2);
+  mirrorMode = false;
+  
+  pin_enB = enB;
   pin_in[2] = in3;
   pin_in[3] = in4;
 
   /* Setup the required pins for the motor controllers */
-  pinMode(pin_enA, OUTPUT);
   pinMode(pin_enB, OUTPUT);
 
-  for(int motor:pin_in)
-    pinMode(motor, OUTPUT);
+  for(int mot = 2; mot < 4; mot ++)
+    pinMode(pin_in[mot], OUTPUT);
 
   /* Disable the controller just in case */
   disable();
+}
+
+/* est speed for both motors */
+void AQMH2407ND::setSpeed(int speed) {
+  if(mirrorMode) {
+    setSpeed(SIDE_A, speed);
+  } else {
+    setSpeed(SIDE_A, speed);
+    setSpeed(SIDE_B, speed);
+  }
 }
 
 /* set the speed of a motor */
 void AQMH2407ND::setSpeed(int side, int speed) {
   int pos;
   int neg;
-  
-  /* Clear all previous set speeds */
-  for(int motorNum:pin_in)
-    analogWrite(motorNum, 0);
-
-  /* Early return if speed is zero */
-  if(speed == 0)
-    return;
 
   /* Get the side to be set */
   switch(side) {
     case SIDE_A:
       pos = pin_in[0];
       neg = pin_in[1];
+      for(int mot = 0; mot < 2; mot ++)
+        analogWrite(pin_in[mot], 0);
       break;
     case SIDE_B:
       pos = pin_in[2];
       neg = pin_in[3];
+      for(int mot = 2; mot < 4; mot ++)
+        analogWrite(pin_in[mot], 0);
       break;
     default:
       /* Oops, something bad happened */
       return;
   }
 
+  /* Early return if speed is zero */
+  if(speed == 0)
+    return;
+    
   /* Add overduty protections */
   speed = min(max(speed, -255), 255);
   int mappedSpeed = map(speed, -255, 255, -max_duty_cycle, max_duty_cycle);
@@ -55,7 +81,7 @@ void AQMH2407ND::setSpeed(int side, int speed) {
   if(speed > 0) {
     analogWrite(pos, mappedSpeed);
   } else if(speed < 0) {
-    analogWrite(neg, mappedSpeed);
+    analogWrite(neg, -mappedSpeed);
   }
 }
 
@@ -71,19 +97,25 @@ void AQMH2407ND::setMaxDuty(int duty) {
 /* Enable the controller */
 void AQMH2407ND::enable() {
   digitalWrite(pin_enA, HIGH);
-  digitalWrite(pin_enB, HIGH);
+  if(!mirrorMode)
+    digitalWrite(pin_enB, HIGH);
 }
 
 
 /* Disable the controller */
 void AQMH2407ND::disable() {
   digitalWrite(pin_enA, LOW);
-  digitalWrite(pin_enB, LOW);
+  
+  if(!mirrorMode)
+    digitalWrite(pin_enB, LOW);
 
   /* Clear the set speed */
-  for(int motor:pin_in) {
-    digitalWrite(motor, LOW);
-    analogWrite(motor, 0);
+  for(int mot = 0; mot < 4; mot ++) {
+    digitalWrite(pin_in[mot], LOW);
+    analogWrite(pin_in[mot], 0);
+    
+    if(mirrorMode && mot == 1)
+      break;
   }
 }
 

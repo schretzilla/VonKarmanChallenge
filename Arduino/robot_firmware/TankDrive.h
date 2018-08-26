@@ -21,15 +21,15 @@
 
 class TankDrive {
   public:
-    TankDrive(AQMH2407ND frontController, AQMH2407ND rearController);
+    TankDrive(AQMH2407ND *leftController, AQMH2407ND *rightController);
     void setSpeed(int speed);
     void setRotation(int speed);
     void setAngle(int deg);
     void run();
     
   private:
-    AQMH2407ND fc;  // Front driver
-    AQMH2407ND rc;  // Rear driver
+    AQMH2407ND *lc;  // left driver
+    AQMH2407ND *rc;  // right driver
     int speed = 0;
     int angle = 0;
 };

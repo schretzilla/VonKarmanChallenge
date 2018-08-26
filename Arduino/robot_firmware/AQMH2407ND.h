@@ -27,7 +27,9 @@
 
 class AQMH2407ND {
   public:
+    AQMH2407ND(int enA, int in1, int in2);
     AQMH2407ND(int enA, int enB, int in1, int in2, int in3, int in4);
+    void setSpeed(int speed);
     void setSpeed(int side, int speed);
     void setMaxDuty(int duty);
     void enable();
@@ -35,6 +37,7 @@ class AQMH2407ND {
 
   private:
     int max_duty_cycle = 255;
+    boolean mirrorMode = true;
     int pin_enA;
     int pin_enB;
     int pin_in[4];
