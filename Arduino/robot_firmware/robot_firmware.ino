@@ -27,21 +27,51 @@ AQMH2407ND *leftDriver;
 AQMH2407ND *rightDriver;
 TankDrive *drive;
 
+struct DATA {
+    float linear;
+    float rotation;
+    float servo;
+} received;
+
 void setup() {
   /* Setup serial connections */
   Serial.begin(115200);
   Serial.println(F("Welcome to the VKC robot firmware"));
   Serial.println(F("INIT: Firmware booting..."));
-
+  
   /* Setup the tank drive */
   leftDriver = new AQMH2407ND(7, 10, 11);
   rightDriver = new AQMH2407ND(8, 3, 9);
-
+  
+  leftDriver->setReversed(true);
+  rightDriver->setReversed(true);
+  
   drive = new TankDrive(leftDriver, rightDriver);
   dmesg("Finished setting up drivers");
   drive->setSpeed(0);
 }
 
 void loop() {
-  
+   if (Serial.available() >= sizeof(uint8_t)) {
+       delayMicroseconds(10);
+       uint8_t cmd = (uint8_t) Serial.read();
+       Serial.print("GOT a cmd");
+       Serial.println(cmd);
+       // TWIST MOTOR COMMAND
+       if (cmd == 0) {
+           Serial.readBytes((char *) &received.linear, sizeof(float));
+           Serial.readBytes((char *) &received.rotation, sizeof(float));
+           Serial.print("GOT TWIST");
+           Serial.println((int) received.linear);
+           Serial.println((int) received.rotation);
+           //setWheelVelocity((int) ((received.linear + received.rotation) * 100), (int) ((received.linear - received.rotation) * 100));
+       }
+       // SERVO MOTOR COMMAND
+       else if (cmd == 2) {
+           Serial.readBytes((char *) &received.servo, sizeof(float));
+           Serial.print("GOT SERVO");
+           Serial.println((int) received.servo);
+           //theServo.write((int) received.servo);
+       }
+   }
 }

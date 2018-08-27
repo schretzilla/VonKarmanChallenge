@@ -5,13 +5,13 @@ AQMH2407ND::AQMH2407ND(int enA, int in1, int in2) {
   pin_enA = enA;
   pin_in[0] = in1;
   pin_in[1] = in2;
-
+  
   /* Setup the required pins for the motor controllers */
   pinMode(pin_enA, OUTPUT);
-
+  
   for(int mot = 0; mot < 2; mot ++)
     pinMode(pin_in[mot], OUTPUT);
-
+  
   /* Disable the controller just in case */
   disable();
 }
@@ -24,7 +24,7 @@ AQMH2407ND::AQMH2407ND(int enA, int enB, int in1, int in2, int in3, int in4) {
   pin_enB = enB;
   pin_in[2] = in3;
   pin_in[3] = in4;
-
+  
   /* Setup the required pins for the motor controllers */
   pinMode(pin_enB, OUTPUT);
 
@@ -45,6 +45,15 @@ void AQMH2407ND::setSpeed(int speed) {
   }
 }
 
+void AQMH2407ND::setReversed(boolean a) {
+  reversed_a = a;
+}
+
+void AQMH2407ND::setReversed(boolean a, boolean b) {
+  reversed_a = a;
+  reversed_b = b;
+}
+
 /* set the speed of a motor */
 void AQMH2407ND::setSpeed(int side, int speed) {
   int pos;
@@ -53,14 +62,26 @@ void AQMH2407ND::setSpeed(int side, int speed) {
   /* Get the side to be set */
   switch(side) {
     case SIDE_A:
-      pos = pin_in[0];
-      neg = pin_in[1];
+      if(!reversed_a) {
+        pos = pin_in[0];
+        neg = pin_in[1];
+      } else {
+        neg = pin_in[0];
+        pos = pin_in[1];
+      }
+      
       for(int mot = 0; mot < 2; mot ++)
         analogWrite(pin_in[mot], 0);
       break;
     case SIDE_B:
-      pos = pin_in[2];
-      neg = pin_in[3];
+      if(!reversed_b) {
+        pos = pin_in[2];
+        neg = pin_in[3];
+      } else {
+        neg = pin_in[2];
+        pos = pin_in[3];
+      }
+      
       for(int mot = 2; mot < 4; mot ++)
         analogWrite(pin_in[mot], 0);
       break;
@@ -108,7 +129,7 @@ void AQMH2407ND::disable() {
   
   if(!mirrorMode)
     digitalWrite(pin_enB, LOW);
-
+  
   /* Clear the set speed */
   for(int mot = 0; mot < 4; mot ++) {
     digitalWrite(pin_in[mot], LOW);

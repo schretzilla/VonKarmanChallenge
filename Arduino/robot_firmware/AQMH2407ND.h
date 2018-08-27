@@ -32,12 +32,16 @@ class AQMH2407ND {
     void setSpeed(int speed);
     void setSpeed(int side, int speed);
     void setMaxDuty(int duty);
+    void setReversed(boolean a);
+    void setReversed(boolean a, boolean b);
     void enable();
     void disable();
 
   private:
     int max_duty_cycle = 255;
     boolean mirrorMode = true;
+    boolean reversed_a;
+    boolean reversed_b;
     int pin_enA;
     int pin_enB;
     int pin_in[4];
