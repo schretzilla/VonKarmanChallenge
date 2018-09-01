@@ -74,6 +74,8 @@ void loop() {
   /* avoid using delay by checking delta time */
   if(millis() - ros_watchdog > 1000) {
     nh.spinOnce();
+
+    ros_watchdog = millis();
   }
 }
 
