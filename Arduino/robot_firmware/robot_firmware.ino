@@ -17,21 +17,36 @@
  * |  |-Pin 8 (!PWM) -> Enable
  * |  |-Pin 3  (PWM) -> Pos
  * |  |-Pin 9  (PWM) -> Neg
+ * 
+ * index  type
+ * 0    Left/Right Axis stick left
+ * 1    Up/Down Axis stick left
+ * 2    LT
+ * 3    Left/Right Axis stick right
+ * 4    Up/Down Axis stick right
+ * 5    RT
+ * 6    cross key left/right
+ * 7    cross key up/down
+ * 
  */
 
+#include <ros.h>
+#include <std_msgs/Empty.h>
+#include <std_msgs/String.h>
+#include <sensor_msgs/Joy.h>
+
 #include "AQMH2407ND.h"
-#include "TankDrive.h"
 #include "Utilities.h"
 
 AQMH2407ND *leftDriver;
 AQMH2407ND *rightDriver;
-TankDrive *drive;
 
-struct DATA {
-    float linear;
-    float rotation;
-    float servo;
-} received;
+long ros_watchdog;
+void readMessageCallback(const sensor_msgs::Joy& joy);
+
+ros::NodeHandle nh;
+ros::Subscriber<sensor_msgs::Joy> sub("joy", &readMessageCallback);
+
 
 void setup() {
   /* Setup serial connections */
@@ -45,33 +60,27 @@ void setup() {
   
   leftDriver->setReversed(true);
   rightDriver->setReversed(true);
-  
-  drive = new TankDrive(leftDriver, rightDriver);
-  dmesg("Finished setting up drivers");
-  drive->setSpeed(0);
+
+  leftDriver->enable();
+  rightDriver->enable();
+
+  /* Setup ROS Node */
+  nh.initNode();
+  nh.subscribe(sub);
+  ros_watchdog = millis();
 }
 
 void loop() {
-   if (Serial.available() >= sizeof(uint8_t)) {
-       delayMicroseconds(10);
-       uint8_t cmd = (uint8_t) Serial.read();
-       Serial.print("GOT a cmd");
-       Serial.println(cmd);
-       // TWIST MOTOR COMMAND
-       if (cmd == 0) {
-           Serial.readBytes((char *) &received.linear, sizeof(float));
-           Serial.readBytes((char *) &received.rotation, sizeof(float));
-           Serial.print("GOT TWIST");
-           Serial.println((int) received.linear);
-           Serial.println((int) received.rotation);
-           //setWheelVelocity((int) ((received.linear + received.rotation) * 100), (int) ((received.linear - received.rotation) * 100));
-       }
-       // SERVO MOTOR COMMAND
-       else if (cmd == 2) {
-           Serial.readBytes((char *) &received.servo, sizeof(float));
-           Serial.print("GOT SERVO");
-           Serial.println((int) received.servo);
-           //theServo.write((int) received.servo);
-       }
-   }
+  /* avoid using delay by checking delta time */
+  if(millis() - ros_watchdog > 1000) {
+    nh.spinOnce();
+  }
+}
+
+void readMessageCallback(const sensor_msgs::Joy& joy) {
+  int leftJoyStick = fmap(joy.axes[1], -1, 1, -255, 255);
+  int rightJoyStick = fmap(joy.axes[4], -1, 1, -255, 255);
+  
+  leftDriver->setSpeed(leftJoyStick);
+  rightDriver->setSpeed(rightJoyStick);
 }
