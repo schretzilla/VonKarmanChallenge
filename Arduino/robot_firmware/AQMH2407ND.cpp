@@ -90,8 +90,9 @@ void AQMH2407ND::setSpeed(int side, int speed) {
       return;
   }
 
-  /* Early return if speed is zero */
-  if(speed == 0)
+  /* Early return if speed is within the joystick's deadzone */
+  const int joystickDeadzone = 40; 
+  if(-joystickDeadzone < speed && speed < joystickDeadzone)
     return;
     
   /* Add overduty protections */
@@ -139,4 +140,5 @@ void AQMH2407ND::disable() {
       break;
   }
 }
+
 
