@@ -7,9 +7,9 @@ clc; clear; close all;
 
 %   Set up rotation inputs
 old_point = [1,2,3];
-line_origin = [0,0,0];
-line_vector = [0,0,1];
-line = [0,0,0;0,0,1];
+line_origin = [0.2,0.5,0.1];
+line_vector = [-1,.7,1];
+line = [line_origin;line_origin+line_vector];
 theta = 0:270;
 
 %   Set up Figure
