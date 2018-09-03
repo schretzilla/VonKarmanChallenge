@@ -1,0 +1,18 @@
+%%  Line rotation Test
+%   Avery Bodenstein
+%   9/3/18
+
+%%  Inputs
+clc; clear; close all;
+
+old_point = [1,2,3];
+line_origin = [0,0,0];
+line_vector = [0,0,1];
+theta = 60;
+
+figure
+plot3(old_point(1),old_point(2),old_point(3),'k*')
+hold on
+plot3(line_origin)
+
+new_point = rot_line(old_point,line_origin,line_vector,theta);
