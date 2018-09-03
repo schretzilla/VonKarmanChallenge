@@ -42,11 +42,10 @@ AQMH2407ND *leftDriver;
 AQMH2407ND *rightDriver;
 
 long ros_watchdog;
-void readMessageCallback(const sensor_msgs::Joy& joy);
+void joystickCallback(const sensor_msgs::Joy& joy);
 
 ros::NodeHandle nh;
-ros::Subscriber<sensor_msgs::Joy> sub("joy", &readMessageCallback);
-
+ros::Subscriber<sensor_msgs::Joy> sub("joy", &joystickCallback);
 
 void setup() {
   /* Setup serial connections */
@@ -63,7 +62,7 @@ void setup() {
 
   leftDriver->enable();
   rightDriver->enable();
-
+  
   /* Setup ROS Node */
   nh.initNode();
   nh.subscribe(sub);
@@ -71,18 +70,39 @@ void setup() {
 }
 
 void loop() {
-  /* avoid using delay by checking delta time */
-  if(millis() - ros_watchdog > 1000) {
-    nh.spinOnce();
-
-    ros_watchdog = millis();
-  }
+  nh.spinOnce();
+  delay(1);
 }
 
-void readMessageCallback(const sensor_msgs::Joy& joy) {
-  int leftJoyStick = fmap(joy.axes[1], -1, 1, -255, 255);
-  int rightJoyStick = fmap(joy.axes[4], -1, 1, -255, 255);
+//Read Joystic data 
+void joystickCallback(const sensor_msgs::Joy& joy) {
+  //Joystick Axes Constants
+  const int DpadUpDownIndex = 7;
+  const int LeftJoyStickIndex = 1;
+  const int RightJoyStickIndex = 4;
+
+  //Maximum range set for the motors
+  const int MotorOutputRange = 200;
   
-  leftDriver->setSpeed(leftJoyStick);
-  rightDriver->setSpeed(rightJoyStick);
+  //check if Dpad is being used
+  int dpadDirection = joy.axes[DpadUpDownIndex];
+  if(dpadDirection != 0)
+  {
+    //Move MARV in straight line based on Dpad direciton
+    int straightSpeed = fmap(.5, -1, 1, -MotorOutputRange, MotorOutputRange);
+    
+    //set direction forwards or backwards
+    straightSpeed = straightSpeed * dpadDirection; 
+    leftDriver->setSpeed(straightSpeed);
+    rightDriver->setSpeed(straightSpeed);
+  }
+  else
+  {   
+    //Direct MARV by joystick
+    int leftJoyStick = fmap(joy.axes[LeftJoyStickIndex], -1, 1, -MotorOutputRange, MotorOutputRange);
+    int rightJoyStick = fmap(joy.axes[RightJoyStickIndex], -1, 1, -MotorOutputRange, MotorOutputRange);
+    leftDriver->setSpeed(leftJoyStick);
+    rightDriver->setSpeed(rightJoyStick);  
+  }
+  
 }
