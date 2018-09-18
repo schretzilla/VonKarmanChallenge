@@ -10,10 +10,10 @@ y_data = np.zeros( (n_link+1,1) )
 angle_data = np.zeros((n_link+1,1))
 threashold = 0.5
 
-plt.figure(1, figsize=(9,3))
-plt.plot(x_data,y_data,'r-')
-plt.plot(target[0],target[1],'b*')
-plt.show()
+#plt.figure(1, figsize=(9,3))
+#plt.plot(x_data,y_data,'r-')
+#plt.plot(target[0],target[1],'b*')
+#plt.show()
 
 # Run CCD Algorithm
 
