@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import pdb
 
 def CCD_2D( x_data, y_data, angle_data, constraints, goal, threashold, max_iterations):
-    "This does stuff"
+    "Implements 2D Cyclic Coordinate Descent"
     
     n_link = x_data.size-1
 
@@ -15,22 +15,25 @@ def CCD_2D( x_data, y_data, angle_data, constraints, goal, threashold, max_itera
     angle_data = angle_data.reshape(n_link+1,1)
     goal = goal.reshape(2,1)
 
-    # cast all matrices to float
+    # convert all matrices to float
     x_data = x_data.astype(float)
+    y_data = y_data.astype(float)
+    angle_data = angle_data.astype(float)
+    goal = goal.astype(float)
 
     jointAngle = angle_data
     output_angles = angle_data
     # Initialization of Data
     # Set up plot (DEBUG)
-    plt.axis([-1, 10, -1, 7])
-    plt.ion()
-    plt.show()
+    #plt.axis([-1, 10, -1, 7])
+    #plt.ion()
+    #plt.show()
     # plot data (DEBUG)
-    line, = plt.plot(x_data,y_data,'r-')
-    plt.plot(goal[0],goal[1],'b*')
-    plt.draw()
-    plt.pause(0.001)
-    raw_input("Press [Enter] to continue")
+    #line, = plt.plot(x_data,y_data,'r-')
+    #plt.plot(goal[0],goal[1],'b*')
+    #plt.draw()
+    #plt.pause(0.001)
+    #raw_input("Press [Enter] to continue")
     
     error = np.linalg.norm(np.array([(x_data[n_link]),(y_data[n_link])])-goal)
 
@@ -53,12 +56,12 @@ def CCD_2D( x_data, y_data, angle_data, constraints, goal, threashold, max_itera
             b = (goal-pc)/np.linalg.norm(goal-pc)
             # rotation angle for current joint to minimize b
             theta = math.acos(np.dot(a,b))
-            print("a")
-            print(a)
-            print("b")
-            print(b)
-            print("Theta")
-            print(math.degrees(theta))
+            #print("a")
+            #print(a)
+            #print("b")
+            #print(b)
+            #print("Theta")
+            #print(math.degrees(theta))
             #pdb.set_trace() # DEBUG
             # check for rotation direction
             b = b.reshape(1,2)
@@ -80,7 +83,7 @@ def CCD_2D( x_data, y_data, angle_data, constraints, goal, threashold, max_itera
             # calculate rotation matrix
             R = np.array([(math.cos(angle_data[i-1]),-math.sin(angle_data[i-1])),(math.sin(angle_data[i-1]),math.cos(angle_data[i-1]))])
 
-            pdb.set_trace() # DEBUG
+            #pdb.set_trace() # DEBUG
             while i<=n_link+1:
                 #pdb.set_trace() # DEBUG
                 # rotate each joint around active joint
@@ -88,21 +91,21 @@ def CCD_2D( x_data, y_data, angle_data, constraints, goal, threashold, max_itera
                 x_data[i-1] = temp[0,0]
                 y_data[i-1] = temp[1,0]
                 angle_data[i-1] = angle_data[i-1] + angle_data[i-2]
-                print("temp")
-                print(temp)
-                print("x_data")
-                print(x_data)
-                print("y_data")
-                print(y_data)
-                print("angle_data")
-                print(angle_data)
+                #print("temp")
+                #print(temp)
+                #print("x_data")
+                #print(x_data)
+                #print("y_data")
+                #print(y_data)
+                #print("angle_data")
+                #print(angle_data)
 
                 # plot data (DEBUG)
-                line.set_xdata(x_data)
-                line.set_ydata(y_data)
-                plt.draw()
-                plt.pause(0.001)
-                raw_input("Press [Enter] to continue")
+                #line.set_xdata(x_data)
+                #line.set_ydata(y_data)
+                #plt.draw()
+                #plt.pause(0.001)
+                #raw_input("Press [Enter] to continue")
 
                 #pdb.set_trace() # DEBUG
                 i = i + 1
