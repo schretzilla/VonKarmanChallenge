@@ -36,11 +36,13 @@
 #include <sensor_msgs/Joy.h>
 
 #include "AQMH2407ND.h"
+#include "Electromagnet.h"
 #include "Utilities.h"
 
 AQMH2407ND *leftDriver;
 AQMH2407ND *rightDriver;
 Electromagnet *eMag;
+long eMag_watchdog;
 
 long ros_watchdog;
 void joystickCallback(const sensor_msgs::Joy& joy);
@@ -68,6 +70,7 @@ void setup() {
   /* Setup the Electromagnet */
   dmesg("Charging up the magnet\n");
   eMag = new Electromagnet(5);
+  eMag_watchdog = millis();
   
   /* Setup ROS Node */
   dmesg("Setting up ROS\n");
@@ -90,6 +93,14 @@ void joystickCallback(const sensor_msgs::Joy& joy) {
 
   //Maximum range set for the motors
   const int MotorOutputRange = 200;
+
+  /* Check if we press the RB Button */
+  if(joy.buttons[5] && millis() - eMag_watchdog > 500) {
+    eMag->toggle();
+
+    /* Reset the button debounce */
+    eMag_watchdog = millis();
+  }
 
   //check if Dpad is being used
   int dpadDirection = joy.axes[DpadUpDownIndex];
