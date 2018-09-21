@@ -5,6 +5,13 @@
 - ROS Kinetic
 - [ROS Joy](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick) - for the X-Box controller interaction
 
+### Python
+- zbar
+- pyzbar
+- numpy
+- imutils
+- opencv-contrib-python
+
 ### On the Raspberry Pi 3 B:
 - [ROS Kinetic Image](https://downloads.ubiquityrobotics.com/pi.html)
 - Arduino IDE Installed
