@@ -40,6 +40,7 @@
 
 AQMH2407ND *leftDriver;
 AQMH2407ND *rightDriver;
+Electromagnet *eMag;
 
 long ros_watchdog;
 void joystickCallback(const sensor_msgs::Joy& joy);
@@ -54,6 +55,7 @@ void setup() {
   Serial.println(F("INIT: Firmware booting..."));
   
   /* Setup the tank drive */
+  dmesg("Starting Motor Controllers\n");
   leftDriver = new AQMH2407ND(7, 10, 11);
   rightDriver = new AQMH2407ND(8, 3, 9);
   
@@ -62,8 +64,13 @@ void setup() {
 
   leftDriver->enable();
   rightDriver->enable();
+
+  /* Setup the Electromagnet */
+  dmesg("Charging up the magnet\n");
+  eMag = new Electromagnet(5);
   
   /* Setup ROS Node */
+  dmesg("Setting up ROS\n");
   nh.initNode();
   nh.subscribe(sub);
   ros_watchdog = millis();
@@ -83,7 +90,7 @@ void joystickCallback(const sensor_msgs::Joy& joy) {
 
   //Maximum range set for the motors
   const int MotorOutputRange = 200;
-  
+
   //check if Dpad is being used
   int dpadDirection = joy.axes[DpadUpDownIndex];
   if(dpadDirection != 0)
