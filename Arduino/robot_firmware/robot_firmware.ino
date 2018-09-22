@@ -39,6 +39,9 @@
 #include "Electromagnet.h"
 #include "Utilities.h"
 
+#define BAUDRATE 250000
+
+
 AQMH2407ND *leftDriver;
 AQMH2407ND *rightDriver;
 Electromagnet *eMag;
@@ -52,7 +55,7 @@ ros::Subscriber<sensor_msgs::Joy> sub("joy", &joystickCallback);
 
 void setup() {
   /* Setup serial connections */
-  Serial.begin(115200);
+  Serial.begin(BAUDRATE);
   Serial.println(F("Welcome to the VKC robot firmware"));
   Serial.println(F("INIT: Firmware booting..."));
   
@@ -74,14 +77,20 @@ void setup() {
   
   /* Setup ROS Node */
   dmesg("Setting up ROS\n");
+  Serial.flush();
+  nh.getHardware()->setBaud(BAUDRATE);
   nh.initNode();
   nh.subscribe(sub);
-  ros_watchdog = millis();
+  ros_watchdog = micros();
+
+  dmesg("Done\n");
 }
 
 void loop() {
-  nh.spinOnce();
-  delay(1);
+  if(micros() - ros_watchdog > 500) {
+    nh.spinOnce();
+    ros_watchdog = micros();
+  }
 }
 
 //Read Joystic data 
