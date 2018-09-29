@@ -30,11 +30,12 @@ def callback(data):
     if data.buttons[ButtonA] == ActivatedButton:
       #Cycle Forward
       self.m_arm.CycleToNextServo()
+      rospy.loginfo(self.m_arm.CurrentServoIndex())
 
     elif data.buttons[ButtonB] == ActivatedButton:
       #Cycle Back one servo
       self.m_arm.CycleToPreviousServo()
-
+      rospy.loginfo(self.m_arm.CurrentServoIndex())
     elif (
               data.Buttons[ButtonY] == ActivatedButton 
               and data.Axis[RightTrigger] == ActivatedButton
@@ -85,27 +86,13 @@ def listener():
   rospy.Subscriber('joy', Joy, callback)
   rospy.spin()
 
-'''
-#Move the specified joint to angle1 then angle 2 with a pause between both angles
-def TestJointMovement(jointIndex, angle1, angle2):
-  SetServoAngle(jointIndex, angle1)
-  time.sleep(2)
-  SetServoAngle(jointIndex, angle2)
-  time.sleep(2)
-
-def StartUpWave():
-  TestJointMovement(ShoulderIndex, 50, 90)
-  TestJointMovement(ElbowIndex, 50, 90)
-  TestJointMovement(WristPanIndex, 50, 90)
-  TestJointMovement(WristIndex, 50, 90)
-'''
-
 if __name__ == '__main__':
-  self.m_arm = Arm()
+  m_arm = Arm()
   userInput = raw_input("Direction up (u) or down (d) or q to quit:")
   while(userInput != "q"):
     if(userInput == "d"):
       userInput = raw_input("Direction up (u) or down (d) or q to quit:")
+      m_arm.MoveBack()
 
     #SetServoAngle(WristIndex, 50)
     #listener()

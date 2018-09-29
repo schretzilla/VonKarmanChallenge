@@ -26,11 +26,11 @@ class Arm():
 
 	def __init__(self):
 		baseServo = Servo(1, 2)
-		shoulderServo = Servo(ShoulderIndex, ShoulderHomeAngle)
-		elbowServo = Servo(ElbowIndex, ElbowHomeAngle)
-		wristPanServo = Servo(WristPanIndex, WristPanHomeAngle)
-		wristServo = Servo(WristIndex, WristHomeAngle)
-		gripperServo = Servo(GripperIndex, GripperHomeAngle)
+		shoulderServo = Servo(self.ShoulderIndex, self.ShoulderHomeAngle)
+		elbowServo = Servo(self.ElbowIndex, self.ElbowHomeAngle)
+		wristPanServo = Servo(self.WristPanIndex, self.WristPanHomeAngle)
+		wristServo = Servo(self.WristIndex, self.WristHomeAngle)
+		gripperServo = Servo(self.GripperIndex, self.GripperHomeAngle)
 		self.m_servoList = [baseServo, shoulderServo, elbowServo,
 		wristPanServo, wristServo, gripperServo]
 		self.m_currentServoIndex = 0
@@ -54,13 +54,13 @@ class Arm():
 
 	#Move the current servo angle higher
 	def MoveUp(self):
-		currentServo = self.m_servoList[m_currentServoIndex]
-		self.m_currentServo.MoveUp
+		currentServo = self.m_servoList[self.m_currentServoIndex]
+		currentServo.MoveUp
 
 	#Move the current servo angle lower
 	def MoveBack(self):
-		currentServo = self.m_servoList[m_currentServoIndex]
-		self.m_currentServo.MoveBack
+		currentServo = self.m_servoList[self.m_currentServoIndex]
+		currentServo.MoveBack
 
 	#Move all the servos back to their home position
 	def MoveToHomePosition(self):
@@ -79,3 +79,6 @@ class Arm():
 
 	def CurrentlyGripServo(self):
 		return (self.m_currentServoIndex == GripperIndex)
+
+	def CurrentServoIndex(self):
+                                return self.m_currentServoIndex;

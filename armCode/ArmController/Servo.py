@@ -1,12 +1,13 @@
 #! /usr/bin/python
-#import Adafruit_PCA9685
+import Adafruit_PCA9685
  
 class Servo():
 	#Encapsulate all servo data
 
 	#PWM constants
-	#PWM = Adafruit_PCA9685.PCA9685(address=0x60)
-	#PWM.set_pwm_freq(60)
+	global PWM
+	PWM = Adafruit_PCA9685.PCA9685(address=0x60)
+	PWM.set_pwm_freq(60)
 	#The servo movement step size in degrees
 	MovementStepSize = 5 
 	ServoMin = 150 #TODO: Use these and find them for each servo
@@ -15,6 +16,7 @@ class Servo():
 	#Initializer: Sets the home angle to the provided current angle
 	# then moves the servo to this specified angle
 	def __init__(self, armIndex, currentAngle):
+                                initGlobals()
 		self.m_armIndex = armIndex
 		self.m_homeAngle = currentAngle
 		self.m_currentAngle = self.SetServoAngle(currentAngle)
@@ -36,6 +38,6 @@ class Servo():
 	#Private method for updating the servo angle
 	@staticmethod
 	def SetServoAngle(angle):
-		pulse = int(angle * 500.0/180.0 + 150.0)
-		#PWM.set_pwm(self.m_armIndex,0, pulse)
-		return angle
+                        pulse = int(angle * 500.0/180.0 + 150.0)
+                        PWM.set_pwm(self.m_armIndex,0, pulse)
+                        return angle
