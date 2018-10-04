@@ -63,12 +63,20 @@ def TestMoveServoBack():
     curServo = m_arm.GetCurrentServo()
     startingAngle = m_arm.GetCurrentServoAngle()
     servoStepSize = curServo.MovementStepSize
+    desiredAngle = startingAngle - curServo.MovementStepSize
+    movementAllowed = curServo.IsAngleAllowed(desiredAngle)
     
     #Test move servo back
     OutputServoAngle()
     m_arm.MoveBack()
     OutputServoAngle()
-    passed = m_arm.GetCurrentServoAngle() == startingAngle - servoStepSize
+
+    passed = False
+    if(movementAllowed):
+        passed = m_arm.GetCurrentServoAngle() == startingAngle - servoStepSize
+    else:
+        passed = m_arm.GetCurrentServoAngle() == startingAngle
+
     OutputTestStatus(passed, "Move Angle Back Test")
 
 def TestMoveServoForward():
@@ -102,15 +110,15 @@ def TestMoveServo():
     TestMoveServoForward()
     TestMoveServoBack()
 
-    bigAngle = 100
+    bigAngle = curServo.MaxAllowedAngle
     curServo.SetServoAngle(bigAngle)
     TestMoveServoForward()
     TestMoveServoBack()
 
-    
-    
-   
-        
+    smallAngle = curServo.MinAllowedAngle
+    curServo.SetServoAngle(smallAngle)
+    TestMoveServoBack()
+    TestMoveServoForward()
     
 def TestMethods():
     OutputServoIndex()

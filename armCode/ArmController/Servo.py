@@ -16,8 +16,8 @@ class Servo():
     def __init__(self, armIndex, currentAngle):
         self.initGlobals()
         #Todo: pass these in as params
-        self.m_servoMinAngle = 30
-        self.m_servoMaxAngle = 100
+        self.MinAllowedAngle = 30
+        self.MaxAllowedAngle = 100
         self.m_armIndex = armIndex
         #The servo movement step size in degrees
         self.MovementStepSize = 5 
@@ -54,7 +54,7 @@ class Servo():
         return self.m_currentAngle
 
     def IsAngleAllowed(self, angle):
-        return (self.m_servoMinAngle <= angle <= self.m_servoMaxAngle)
+        return (self.MinAllowedAngle <= angle <= self.MaxAllowedAngle)
     
     def GetCurrentAngle(self):
         return self.m_currentAngle
