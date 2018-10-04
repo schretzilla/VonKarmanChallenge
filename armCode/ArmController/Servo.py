@@ -3,8 +3,6 @@ import Adafruit_PCA9685
  
 class Servo():
     #Encapsulate all servo data
-    ServoMin = 150 #TODO: Use these and find them for each servo
-    ServoMax = 600
 
     @staticmethod
     def initGlobals():
@@ -17,18 +15,25 @@ class Servo():
     # then moves the servo to this specified angle
     def __init__(self, armIndex, currentAngle):
         self.initGlobals()
+        #Todo: pass these in as params
+        self.m_servoMinAngle = 30
+        self.m_servoMaxAngle = 100
         self.m_armIndex = armIndex
         #The servo movement step size in degrees
         self.MovementStepSize = 5 
         self.m_homeAngle = currentAngle
-        self.m_currentAngle = self.SetServoAngle(currentAngle)
+        self.m_currentAngle = currentAngle
+        self.SetServoAngle(currentAngle)
+
 
     #Increase the servo's angle by the movement step size
+    #Only moves if within the servos angle bounds
     def MoveUp(self):
         newAngle = self.m_currentAngle + self.MovementStepSize
         self.m_currentAngle = self.SetServoAngle(newAngle)
 
     #Decrease the servo's angle by the movement step size
+    #Only moves if within the servos angle bounds
     def MoveBack(self):
         newAngle = self.m_currentAngle - self.MovementStepSize
         self.m_currentAngle = self.SetServoAngle(newAngle)
@@ -39,9 +44,17 @@ class Servo():
 
     #Method for updating the servo angle
     def SetServoAngle(self, angle):
-        pulse = int(angle * 500.0/180.0 + 150.0)
-        PWM.set_pwm(self.m_armIndex, 0, pulse)
-        return angle
+        movementAllowed = self.IsAngleAllowed(angle)
+        #only move if it is within bounds
+        if(movementAllowed):    
+            pulse = int(angle * 500.0/180.0 + 150.0)
+            PWM.set_pwm(self.m_armIndex, 0, pulse)
+            self.m_currentAngle = angle
 
+        return self.m_currentAngle
+
+    def IsAngleAllowed(self, angle):
+        return (self.m_servoMinAngle <= angle <= self.m_servoMaxAngle)
+    
     def GetCurrentAngle(self):
         return self.m_currentAngle

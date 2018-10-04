@@ -6,22 +6,22 @@ import time
 class Arm():
     #Servo Indicies
     BasePanIndex = 0
-    BaseHomeAngle = 30
+    BaseHomeAngle = 100
 
     ShoulderIndex = 1
-    ShoulderHomeAngle = 30
+    ShoulderHomeAngle = 100
 
     ElbowIndex = 3
-    ElbowHomeAngle = 30
+    ElbowHomeAngle = 100
 
     WristPanIndex =4
-    WristPanHomeAngle = 30
+    WristPanHomeAngle = 100
 
     WristIndex = 5
-    WristHomeAngle = 30
+    WristHomeAngle = 100
 
     GripperIndex = 6
-    GripperHomeAngle = 30
+    GripperHomeAngle = 100
 
 
     def __init__(self):
