@@ -68,7 +68,7 @@ def Callback(data):
         elif (m_arm.CurrentlyOnGripServo()):
             #Handle gripper movement
             rospy.loginfo("Handle gripper movement")
-            rightJoyHorizontalInput = data.axes[HorizontalRightJoy]
+            rightJoyVerticalInput = data.axes[VerticalRightJoy]
             HandleJoystickInput(rightJoyVerticalInput)
 
 """
