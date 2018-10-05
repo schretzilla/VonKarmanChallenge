@@ -11,16 +11,16 @@ class Arm():
     ShoulderIndex = 1
     ShoulderHomeAngle = 100
 
-    ElbowIndex = 3
+    ElbowIndex = 2
     ElbowHomeAngle = 100
 
-    WristPanIndex =4
+    WristPanIndex = 3
     WristPanHomeAngle = 100
 
-    WristIndex = 5
+    WristIndex = 4
     WristHomeAngle = 100
 
-    GripperIndex = 6
+    GripperIndex = 5
     GripperHomeAngle = 100
 
 
