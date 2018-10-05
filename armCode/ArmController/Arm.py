@@ -50,7 +50,7 @@ class Arm():
         if(self.m_currentServoIndex != 0):
             self.m_currentServoIndex -= 1
         else:
-            #move back to top of list
+            #Move back to top of list
             self.m_currentServoIndex = len(self.m_servoList) - 1
 
     #Move the current servo angle higher
@@ -69,17 +69,17 @@ class Arm():
             servo.MoveToHome()
             time.sleep(.5) #don't move it all at once for now
 
-    def CurrentlyMovingHorizontally(self):
-        return (self.m_currentServoIndex == BasePanIndex or 
-                	self.m_currentServoIndex == WristPanIndex)
+    def CurrentlyOnPanServo(self):
+        return (self.m_currentServoIndex == self.BasePanIndex or 
+                	self.m_currentServoIndex == self.WristPanIndex)
 
-    def CurrentlyTiltServo(self):
-        return (self.m_currentServoIndex == ShoulderIndex or
-		self.m_currentServoIndex == ElbowIndex or
-                                self.m_currentServoIndex == WristIndex)
+    def CurrentlyOnTiltServo(self):
+        return (self.m_currentServoIndex == self.ShoulderIndex or
+		self.m_currentServoIndex == self.ElbowIndex or
+                                self.m_currentServoIndex == self.WristIndex)
 
-    def CurrentlyGripServo(self):
-        return (self.m_currentServoIndex == GripperIndex)
+    def CurrentlyOnGripServo(self):
+        return (self.m_currentServoIndex == self.GripperIndex)
 
     def GetCurrentServoIndex(self):
         return self.m_currentServoIndex
