@@ -36,14 +36,12 @@ def Callback(data):
         if data.buttons[ButtonA] == ActivatedButton:
             #Cycle Forward
             m_arm.CycleToNextServo()
-            rospy.loginfo("Cycle to next servo")
-            rospy.loginfo("Current Servo is " + str(m_arm.GetCurrentServoIndex()))
+            rospy.loginfo("Current Servo is now: " + str(m_arm.GetCurrentServoIndex()))
 
         elif data.buttons[ButtonB] == ActivatedButton:
             #Cycle Back one servo
             m_arm.CycleToPreviousServo()
-            rospy.loginfo("Cycle to previous servo")
-            rospy.loginfo("Current Servo is " + str(m_arm.GetCurrentServoIndex()))
+            rospy.loginfo("Current Servo is now: " + str(m_arm.GetCurrentServoIndex()))
             
         elif (
                   data.buttons[ButtonY] == ActivatedButton 
@@ -57,6 +55,8 @@ def Callback(data):
             #Pan Movement
             rospy.loginfo("Move horizontally")
             rightJoyHorizontalInput = data.axes[HorizontalRightJoy]
+            #invert horizontal joy input so that right is positive 1
+            rightJoyHorizontalInput *=  -1
             HandleJoystickInput(rightJoyHorizontalInput)
 
         elif (m_arm.CurrentlyOnTiltServo()):
