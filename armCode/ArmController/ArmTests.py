@@ -101,6 +101,8 @@ def TestMoveServoForward():
         
     OutputTestStatus(passed, "Move Angle Forward Test")
 
+#Tests the setting of servo angles to ensure that move up
+#and move back doesn't go max/min angles
 def TestMoveServo():
     #Setup
     curServo = m_arm.GetCurrentServo()
@@ -119,6 +121,7 @@ def TestMoveServo():
     curServo.SetServoAngle(smallAngle)
     TestMoveServoBack()
     TestMoveServoForward()
+    
     
 def TestMethods():
     OutputServoIndex()
