@@ -6,33 +6,48 @@ import time
 class Arm():
     #Servo Indicies
     BasePanIndex = 0
-    BaseHomeAngle = 100
+    BaseHomeAngle = 30
+    BaseMinAngle = 0
+    BaseMaxAngle = 180
 
     ShoulderIndex = 1
-    ShoulderHomeAngle = 100
+    ShoulderHomeAngle = 30
+    ShoulderMinAngle = 0
+    ShoulderMaxAngle = 180
 
     ElbowIndex = 2
-    ElbowHomeAngle = 100
-
+    ElbowHomeAngle = 30
+    ElbowMinAngle = 0
+    ElbowMaxAngle = 180
+    
     WristPanIndex = 3
-    WristPanHomeAngle = 100
+    WristPanHomeAngle = 30
+    WristPanMinAngle = 0
+    WristPanMaxAngle = 180
 
     WristIndex = 4
-    WristHomeAngle = 100
-
+    WristHomeAngle = 30
+    WristMinAngle = 10
+    WristMaxAngle = 120
+    
     GripperIndex = 5
-    GripperHomeAngle = 100
-
+    GripperHomeAngle = 30
+    GripperMinAngle = 16
+    GripperMaxAngle = 103
 
     def __init__(self):
-        baseServo = Servo(self.BasePanIndex, self.BaseHomeAngle)
-        shoulderServo = Servo(self.ShoulderIndex, self.ShoulderHomeAngle)
-        elbowServo = Servo(self.ElbowIndex, self.ElbowHomeAngle)
-        wristPanServo = Servo(self.WristPanIndex, self.WristPanHomeAngle)
-        wristServo = Servo(self.WristIndex, self.WristHomeAngle)
-        gripperServo = Servo(self.GripperIndex, self.GripperHomeAngle)
+        #Initiate servo objects
+        baseServo = Servo(self.BasePanIndex, self.BaseHomeAngle, self.BaseMinAngle, self.BaseMaxAngle)
+        shoulderServo = Servo(self.ShoulderIndex, self.ShoulderHomeAngle, self.ShoulderMinAngle, self.ShoulderMaxAngle)
+        elbowServo = Servo(self.ElbowIndex, self.ElbowHomeAngle, self.ElbowMinAngle, self.ElbowMaxAngle)
+        wristPanServo = Servo(self.WristPanIndex, self.WristPanHomeAngle, self.WristPanMinAngle, self.WristPanMaxAngle)
+        wristServo = Servo(self.WristIndex, self.WristHomeAngle, self.WristMinAngle, self.WristMaxAngle)
+        gripperServo = Servo(self.GripperIndex, self.GripperHomeAngle, self.GripperMinAngle, self.GripperMaxAngle)
+
+        #Populate servo list
         self.m_servoList = [baseServo, shoulderServo, elbowServo,
         wristPanServo, wristServo, gripperServo]
+        #set current servo index
         self.m_currentServoIndex = 0
 
     #Move to next servo index. Cycle back to zero if on the last servo
@@ -90,4 +105,9 @@ class Arm():
 
     def GetCurrentServo(self):
         return self.m_servoList[self.m_currentServoIndex]
+
+    def SetCurrentServoAngle(self, angle):
+        curServo = self.m_servoList[self.m_currentServoIndex]
+        curServo.SetServoAngle(angle)
+
     
