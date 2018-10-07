@@ -13,14 +13,14 @@ class Servo():
 
     #Initializer: Sets the home angle to the provided current angle
     # then moves the servo to this specified angle
-    def __init__(self, armIndex, currentAngle):
+    def __init__(self, armIndex, currentAngle, minAllowedAngle, maxAllowedAngle):
         self.initGlobals()
         #Todo: pass these in as params
-        self.MinAllowedAngle = 30
-        self.MaxAllowedAngle = 100
+        self.MinAllowedAngle = minAllowedAngle
+        self.MaxAllowedAngle = maxAllowedAngle
         self.m_armIndex = armIndex
         #The servo movement step size in degrees
-        self.MovementStepSize = 5 
+        self.MovementStepSize = 1
         self.m_homeAngle = currentAngle
         self.m_currentAngle = currentAngle
         self.SetServoAngle(currentAngle)
