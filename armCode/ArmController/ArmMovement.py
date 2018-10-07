@@ -15,7 +15,7 @@ ActivatedButton = 1
 ActivatedTrigger= -1
 
 #The deadzone value for which joystick commands are ignored
-JoyDeadzone = .25
+JoyDeadzone = .5
 
 #XBox Button Array Indicies
 ButtonA = 0
@@ -80,10 +80,10 @@ def HandleJoystickInput(joystickInput):
     if(joystickInput > JoyDeadzone):
         m_arm.MoveUp()
         rospy.loginfo("Move up: Angle now: " + str(m_arm.GetCurrentServoAngle()))
-
     elif(joystickInput < -JoyDeadzone):
         m_arm.MoveBack()
         rospy.loginfo("Move down: Angle now: " + str(m_arm.GetCurrentServoAngle()))
+    
 
 def listener():
     rospy.init_node('listener', anonymous=True)
