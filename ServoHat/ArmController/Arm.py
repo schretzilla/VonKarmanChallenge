@@ -35,6 +35,16 @@ class Arm():
     GripperMinAngle = 16
     GripperMaxAngle = 103
 
+    #Grab Ready Position
+    BasePanGrabAngle = 90
+    ShoulderGrabAngle = 90
+    ElbowGrabAngle = 20
+    WristPanGrabAngle = 90
+    WristGrabAngle = 50
+    GripperGrabAngle = 100
+    GrabPositionArray = [BasePanGrabAngle, ShoulderGrabAngle, ElbowGrabAngle,
+                         WristPanGrabAngle, WristGrabAngle, GripperGrabAngle]
+
     def __init__(self):
         #Initiate servo objects
         baseServo = Servo(self.BasePanIndex, self.BaseHomeAngle, self.BaseMinAngle, self.BaseMaxAngle)
@@ -77,7 +87,15 @@ class Arm():
     def MoveBack(self):
         currentServo = self.m_servoList[self.m_currentServoIndex]
         currentServo.MoveBack()
-        
+
+    def MoveToReadyGrabPosition(self):
+        curAngleIndex = 0 #Todo, don't use index like this
+        for curServo in self.m_servoList:
+            servoAngle = self.GrabPositionArray[curAngleIndex]
+            curServo.SetServoAngle(servoAngle)
+            curAngleIndex += 1
+            time.sleep(.5) #don't move it all at once for now
+
     #Move all the servos back to their home position
     def MoveToHomePosition(self):
         for servo in self.m_servoList:
