@@ -51,6 +51,14 @@ def Callback(data):
             m_arm.MoveToHomePosition()
             rospy.loginfo("Move arm to home position")
 
+        elif(
+                data.buttons[ButtonX] == ActivatedButton 
+                and data.axes[RightTrigger] == ActivatedTrigger
+                ):
+            #Move to ready grab position
+            m_arm.MoveToReadyGrabPosition()
+            rospy.loginfo("Move arm to ready grab position")
+        
         elif (m_arm.CurrentlyOnPanServo()):
             #Pan Movement
             rospy.loginfo("Move horizontally")
