@@ -8,9 +8,6 @@ import datetime
 import imutils
 import time
 import cv2
-from gtts import gTTS
-from pygame import mixer
-from tempfile import TemporaryFile
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -20,10 +17,10 @@ args = vars(ap.parse_args())
 
 # initialize the video stream and allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-#VideoStreamAddr = 'http://192.168.0.10:9001/?action=stream'
-#vs = VideoStream(VideoStreamAddr).start()
+VideoStreamAddr = 'http://192.168.0.10:9000/?action=stream'
+vs = VideoStream(VideoStreamAddr).start()
 
-vs = VideoStream(src=0).start()
+# vs = VideoStream(src=0).start()
 # vs = VideoStream(usePiCamera=True).start()
 # time.sleep(2.0)
 
@@ -38,9 +35,10 @@ lastCode = ""
 while True:
 	# grab the frame from the threaded video stream and resize it
 	frame = vs.read()
-	frame = imutils.resize(frame, width=800)
-
+	frame = imutils.resize(frame, width=960)
 	height, width, channel = frame.shape
+
+	frame = cv2.warpAffine(frame, cv2.getRotationMatrix2D(((width/2),(height/2)), 180, 1), (width, height))
 
 	cv2.putText(frame, "Last Detected Code: %s" % (lastCode), (20, height-20),
 		cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2)
@@ -79,20 +77,9 @@ while True:
 			
 			print("[INFO] Barcode found: %s" %(barcodeData))
 
-			# speak to me
-			ttsData = TemporaryFile()
-
-			tts = gTTS("QR code identified. %s" %(barcodeData))
-			tts.write_to_fp(ttsData)
-			ttsData.seek(0)
-
-			mixer.init()
-			mixer.music.load(ttsData)
-			mixer.music.play()
-
 
 	# show the output frame
-	windowName = "QR Code Scanner"
+	windowName = "Fixed Frame"
 	cv2.imshow(windowName, frame)
 
 	key = cv2.waitKey(10) & 0xFF
