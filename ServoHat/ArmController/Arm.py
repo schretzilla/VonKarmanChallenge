@@ -91,13 +91,12 @@ class Arm():
         GripperGrabAngle = self.GripperMaxAngle
         GrabPositionArray = [BasePanGrabAngle, ShoulderGrabAngle, ElbowGrabAngle,
                          WristPanGrabAngle, WristGrabAngle, GripperGrabAngle]
-    
+        
         curAngleIndex = 0 #Todo, don't use index like this
         for curServo in self.m_servoList:
             servoAngle = GrabPositionArray[curAngleIndex]
             curServo.SetAngle(servoAngle)
-            curAngleIndex += 1
-            time.sleep(.5) #don't move it all at once for now
+            curAngleIndex += 1            
 
     def MagnetGrabPosition(self):
         #Magnet Pickup Positions
@@ -122,7 +121,7 @@ class Arm():
     def HomePosition(self):
         for servo in self.m_servoList:
             servo.MoveToHome()
-            time.sleep(.5) #don't move it all at once for now
+            #time.sleep(.5) #don't move it all at once for now
 
     #Move all servos to their drop position
     def DropPosition(self):
