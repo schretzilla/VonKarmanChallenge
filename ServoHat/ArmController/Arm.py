@@ -6,32 +6,32 @@ import time
 class Arm():
     #Servo Indicies
     BasePanIndex = 0
-    BaseHomeAngle = 30
+    BaseHomeAngle = 90
     BaseMinAngle = 0
     BaseMaxAngle = 180
 
     ShoulderIndex = 1
-    ShoulderHomeAngle = 30
+    ShoulderHomeAngle = 90
     ShoulderMinAngle = 0
     ShoulderMaxAngle = 180
 
     ElbowIndex = 2
-    ElbowHomeAngle = 30
+    ElbowHomeAngle = 90
     ElbowMinAngle = 0
     ElbowMaxAngle = 180
     
     WristPanIndex = 3
-    WristPanHomeAngle = 30
+    WristPanHomeAngle = 90
     WristPanMinAngle = 0
     WristPanMaxAngle = 180
 
     WristIndex = 4
-    WristHomeAngle = 30
+    WristHomeAngle = 40
     WristMinAngle = 10
     WristMaxAngle = 120
     
     GripperIndex = 5
-    GripperHomeAngle = 30
+    GripperHomeAngle = 20
     GripperMinAngle = 16
     GripperMaxAngle = 103
 
@@ -92,7 +92,7 @@ class Arm():
         curAngleIndex = 0 #Todo, don't use index like this
         for curServo in self.m_servoList:
             servoAngle = self.GrabPositionArray[curAngleIndex]
-            curServo.SetServoAngle(servoAngle)
+            curServo.SetAngle(servoAngle)
             curAngleIndex += 1
             time.sleep(.5) #don't move it all at once for now
 
@@ -126,6 +126,6 @@ class Arm():
 
     def SetCurrentServoAngle(self, angle):
         curServo = self.m_servoList[self.m_currentServoIndex]
-        curServo.SetServoAngle(angle)
+        curServo.SetAngle(angle)
 
     
