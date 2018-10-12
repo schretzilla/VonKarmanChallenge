@@ -48,7 +48,7 @@ def Callback(data):
                   and data.axes[RightTrigger] == ActivatedTrigger
                 ):
             #Move to Home Position
-            m_arm.MoveToHomePosition()
+            m_arm.HomePosition()
             rospy.loginfo("Move arm to home position")
 
         elif(
@@ -56,7 +56,7 @@ def Callback(data):
                 and data.axes[RightTrigger] == ActivatedTrigger
                 ):
             #Move to ready grab position
-            m_arm.MoveToReadyGrabPosition()
+            m_arm.ReadyGrabPosition()
             rospy.loginfo("Move arm to ready grab position")
         
         elif (m_arm.CurrentlyOnPanServo()):
