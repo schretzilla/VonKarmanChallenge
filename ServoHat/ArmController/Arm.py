@@ -31,40 +31,13 @@ class Arm():
     WristMaxAngle = 180
     
     GripperIndex = 5
-    GripperHomeAngle = 20
+    GripperHomeAngle = GripperMinAngle
     GripperMinAngle = 16
     GripperMaxAngle = 103
 
-    #Grab Ready Position
-    BasePanGrabAngle = 90
-    ShoulderGrabAngle = 90
-    ElbowGrabAngle = 20
-    WristPanGrabAngle = 90
-    WristGrabAngle = 50
-    GripperGrabAngle = GripperMaxAngle
-    GrabPositionArray = [BasePanGrabAngle, ShoulderGrabAngle, ElbowGrabAngle,
-                         WristPanGrabAngle, WristGrabAngle, GripperGrabAngle]
+    
 
-    #Bucket Drop Positions
-    BasePanDropAngle = 90
-    ShoulderDropAngle = 90
-    ElbowDropAngle = 170
-    WristPanDropAngle = 90
-    WristDropAngle = 170
-    GripperGrabAngle = GripperMaxAngle
-    DropPositionArray = [BasePanDropAngle, ShoulderDropAngle, ElbowDropAngle, WristPanDropAngle,
-                         WristDropAngle, GripperGrabAngle]
 
-    #Magnet Pickup Positions
-    BasePanMagnetGrabAngle = 90
-    ShoulderMagnetGrabAngle = 160
-    ElbowMagnetGrabAngle = 20
-    WristPanMagnetGrabAngle = 90
-    WristMagnetGrabAngle = 160
-    gripperMagnetGrabAngle = GripperMaxAngle
-    MagnetGrabPositionArray = [BasePanMagnetGrabAngle, ShoulderMagnetGrabAngle,
-                               ElbowMagnetGrabAngle, WristPanMagnetGrabAngle, WristMagnetGrabAngle,
-                               gripperMagnetGrabAngle]
 
     def __init__(self):
         #Initiate servo objects
@@ -80,6 +53,9 @@ class Arm():
         wristPanServo, wristServo, gripperServo]
         #set current servo index
         self.m_currentServoIndex = 0
+
+        #Move to home position
+        self.HomePosition()
 
     #Move to next servo index. Cycle back to zero if on the last servo
     def CycleToNextServo(self):
@@ -110,6 +86,16 @@ class Arm():
         currentServo.MoveBack()
 
     def ReadyGrabPosition(self):
+        #Grab Ready Position
+        BasePanGrabAngle = 90
+        ShoulderGrabAngle = 90
+        ElbowGrabAngle = 20
+        WristPanGrabAngle = 90
+        WristGrabAngle = 50
+        GripperGrabAngle = GripperMaxAngle
+        GrabPositionArray = [BasePanGrabAngle, ShoulderGrabAngle, ElbowGrabAngle,
+                         WristPanGrabAngle, WristGrabAngle, GripperGrabAngle]
+    
         curAngleIndex = 0 #Todo, don't use index like this
         for curServo in self.m_servoList:
             servoAngle = self.GrabPositionArray[curAngleIndex]
@@ -118,11 +104,22 @@ class Arm():
             time.sleep(.5) #don't move it all at once for now
 
     def MagnetGrabPosition(self):
-        curAngleIndex = 0 #Todo, don't use index like this
-        for curServo in self.m_servoList:
+        #Magnet Pickup Positions
+        BasePanMagnetGrabAngle = 90
+        ShoulderMagnetGrabAngle = 160
+        ElbowMagnetGrabAngle = 20
+        WristPanMagnetGrabAngle = 90
+        WristMagnetGrabAngle = 180
+        gripperMagnetGrabAngle = GripperMinAngle
+        MagnetGrabPositionArray = [BasePanMagnetGrabAngle, ShoulderMagnetGrabAngle,
+                               ElbowMagnetGrabAngle, WristPanMagnetGrabAngle, WristMagnetGrabAngle,
+                               gripperMagnetGrabAngle]
+    
+        curAngleIndex = len(self.m_servoList)-1 #Todo, don't use index like this
+        for curServo in  reversed(self.m_servoList):
             servoAngle = self.MagnetGrabPositionArray[curAngleIndex]
             curServo.SetAngle(servoAngle)
-            curAngleIndex += 1
+            curAngleIndex -= 1
             time.sleep(.5) #don't move it all at once for now
             
     #Move all the servos back to their home position
@@ -133,6 +130,16 @@ class Arm():
 
     #Move all servos to their drop position
     def DropPosition(self):
+        #Bucket Drop Positions
+        BasePanDropAngle = 90
+        ShoulderDropAngle = 90
+        ElbowDropAngle = 170
+        WristPanDropAngle = 90
+        WristDropAngle = 170
+        GripperGrabAngle = GripperMaxAngle
+        DropPositionArray = [BasePanDropAngle, ShoulderDropAngle, ElbowDropAngle, WristPanDropAngle,
+                         WristDropAngle, GripperGrabAngle]
+    
         curAngleIndex = 0
         for curServo in self.m_servoList:
             servoAngle = self.DropPositionArray[curAngleIndex]
