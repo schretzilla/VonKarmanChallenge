@@ -62,5 +62,5 @@ class Servo():
     def IsAngleAllowed(self, angle):
         return (self.MinAllowedAngle <= angle <= self.MaxAllowedAngle)
     
-    def GetCurrentAngle(self):
+    def GetAngle(self):
         return self.m_currentAngle
