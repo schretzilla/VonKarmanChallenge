@@ -13,7 +13,13 @@ class Servo():
 
     #Initializer: Sets the home angle to the provided current angle
     # then moves the servo to this specified angle
-    def __init__(self, armIndex, currentAngle, minAllowedAngle, maxAllowedAngle):
+    def __init__(self, armIndex, currentAngle, minAllowedAngle=None, maxAllowedAngle=None):
+        #Set default bounds if not inputted
+        if minAllowedAngle == None:
+            minAllowedAngle = 0
+        if maxAllowedAngle == None:
+            maxAllowedAngle = 180
+            
         self.initGlobals()
         #Todo: pass these in as params
         self.MinAllowedAngle = minAllowedAngle
@@ -23,27 +29,27 @@ class Servo():
         self.MovementStepSize = 1
         self.m_homeAngle = currentAngle
         self.m_currentAngle = currentAngle
-        self.SetServoAngle(currentAngle)
+        self.SetAngle(currentAngle)
 
 
     #Increase the servo's angle by the movement step size
     #Only moves if within the servos angle bounds
     def MoveUp(self):
         newAngle = self.m_currentAngle + self.MovementStepSize
-        self.m_currentAngle = self.SetServoAngle(newAngle)
+        self.m_currentAngle = self.SetAngle(newAngle)
 
     #Decrease the servo's angle by the movement step size
     #Only moves if within the servos angle bounds
     def MoveBack(self):
         newAngle = self.m_currentAngle - self.MovementStepSize
-        self.m_currentAngle = self.SetServoAngle(newAngle)
+        self.m_currentAngle = self.SetAngle(newAngle)
 
     #Increase the servo's angle by the movement step size
     def MoveToHome(self):
-        self.m_currentAngle = self.SetServoAngle(self.m_homeAngle)
+        self.m_currentAngle = self.SetAngle(self.m_homeAngle)
 
     #Method for updating the servo angle
-    def SetServoAngle(self, angle):
+    def SetAngle(self, angle):
         movementAllowed = self.IsAngleAllowed(angle)
         #only move if it is within bounds
         if(movementAllowed):    
