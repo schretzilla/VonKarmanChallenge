@@ -107,18 +107,18 @@ def TestMoveServo():
     #Setup
     curServo = m_arm.GetCurrentServo()
     startingAngle = 80
-    curServo.SetServoAngle(startingAngle)
+    curServo.SetAngle(startingAngle)
 
     TestMoveServoForward()
     TestMoveServoBack()
 
     bigAngle = curServo.MaxAllowedAngle
-    curServo.SetServoAngle(bigAngle)
+    curServo.SetAngle(bigAngle)
     TestMoveServoForward()
     TestMoveServoBack()
 
     smallAngle = curServo.MinAllowedAngle
-    curServo.SetServoAngle(smallAngle)
+    curServo.SetAngle(smallAngle)
     TestMoveServoBack()
     TestMoveServoForward()
     
