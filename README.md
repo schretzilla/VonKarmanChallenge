@@ -11,6 +11,8 @@
 - numpy
 - imutils
 - opencv-contrib-python
+- gtty
+- pygame
 
 ### On the Raspberry Pi 3 B:
 - [ROS Kinetic Image](https://downloads.ubiquityrobotics.com/pi.html)
