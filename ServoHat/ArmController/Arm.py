@@ -10,30 +10,30 @@ class Arm():
     BaseMinAngle = 0
     BaseMaxAngle = 180
 
-    ShoulderIndex = 1
+    ShoulderIndex = 5
     ShoulderHomeAngle = 90
     ShoulderMinAngle = 0
     ShoulderMaxAngle = 180
 
-    ElbowIndex = 2
+    ElbowIndex = 1
     ElbowHomeAngle = 90
     ElbowMinAngle = 0
     ElbowMaxAngle = 180
     
-    WristPanIndex = 3
-    WristPanHomeAngle = 90
+    WristPanIndex = 2
+    WristPanHomeAngle = 85 
     WristPanMinAngle = 0
     WristPanMaxAngle = 180
 
-    WristIndex = 4
+    WristIndex = 3
     WristHomeAngle = 90
-    WristMinAngle = 10
-    WristMaxAngle = 180
+    WristMinAngle = 5
+    WristMaxAngle = 145
     
-    GripperIndex = 5
-    GripperMinAngle = 16
+    GripperIndex = 4
+    GripperMinAngle = 105
     GripperHomeAngle = GripperMinAngle
-    GripperMaxAngle = 103
+    GripperMaxAngle = 180
 
     def __init__(self):
         #Initiate servo objects
@@ -86,8 +86,8 @@ class Arm():
         BasePanGrabAngle = 90
         ShoulderGrabAngle = 90
         ElbowGrabAngle = 20
-        WristPanGrabAngle = 90
-        WristGrabAngle = 50
+        WristPanGrabAngle = 70
+        WristGrabAngle = 5
         GripperGrabAngle = self.GripperMaxAngle
         GrabPositionArray = [BasePanGrabAngle, ShoulderGrabAngle, ElbowGrabAngle,
                          WristPanGrabAngle, WristGrabAngle, GripperGrabAngle]
@@ -105,7 +105,7 @@ class Arm():
         ElbowMagnetGrabAngle = 20
         WristPanMagnetGrabAngle = 90
         WristMagnetGrabAngle = 180
-        gripperMagnetGrabAngle = self.GripperMinAngle
+        gripperMagnetGrabAngle = self.GripperMaxAngle
         MagnetGrabPositionArray = [BasePanMagnetGrabAngle, ShoulderMagnetGrabAngle,
                                ElbowMagnetGrabAngle, WristPanMagnetGrabAngle, WristMagnetGrabAngle,
                                gripperMagnetGrabAngle]
@@ -119,8 +119,11 @@ class Arm():
             
     #Move all the servos back to their home position
     def HomePosition(self):
-        for servo in self.m_servoList:
-            servo.MoveToHome()
+        for curServoIndex in range(len(self.m_servoList)):
+            servo = self.m_servoList[curServoIndex]
+            #don't move the gripper index
+            if (curServoIndex != 5):
+                servo.MoveToHome()
             #time.sleep(.5) #don't move it all at once for now
 
     #Move all servos to their drop position
