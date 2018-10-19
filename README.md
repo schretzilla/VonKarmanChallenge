@@ -1,6 +1,6 @@
 # VonKarmanChallenge
 
-## Dependencies
+## Software Dependencies
 ### On the Master Computer
 - ROS Kinetic
 - [ROS Joy](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick) - for the X-Box controller interaction
@@ -19,13 +19,13 @@
 - Arduino IDE Installed
 - [ROS Serial](http://wiki.ros.org/rosserial_arduino/Tutorials/Arduino%20IDE%20Setup)
 
+## Hardware Dependencies
+- An Xbox Controller for driving the rover
+- The Model puppet 
 
 ## Driving the Rover
-For reference it would be best to review [Running ROS on Multiple Machines](http://wiki.ros.org/ROS/Tutorials/MultipleMachines)
-### On the Master Computer
-1. Start roscore
-2. Set your ROS_MASTER_URI=http://{master computer's IP}:11311
-3. run the joy_node [Described Here](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick)
+Once all dependencies are downloaded driving the rover is as easy as running the Driver script
+$ SetupScripts/SingleCommandStartup/MarvOn.sh {Your Computer's IP address here}
 
 ### SSH to the PI
 1. Set your ROS_MASTER_URI=http://{master computer's IP}:11311
